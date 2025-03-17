@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
     // Find customer
     const customer = await Customer.findOne({ email });
     if (!customer) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "User not found! Kindly register..." });
     }
 
     // Check password
@@ -51,7 +51,7 @@ exports.login = async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign({ id: customer._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "2h",
     });
 
     // Set cookie
