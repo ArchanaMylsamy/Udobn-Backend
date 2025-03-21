@@ -1,13 +1,21 @@
 const Product = require("../models/Product");
 const upload = require("../middleware/uploadMiddleware");
+const dotenv = require("dotenv");
 
+// Load environment variables
+dotenv.config();
 // Add a new product
 exports.addProduct = [
   upload.array("images", 5),
   async (req, res) => {
     try {
+      console.log("Request body:", req.body);
+      console.log("Uploaded files:", req.files);
+
       const { name, description, priceInr, priceUsd, category, gender, sizes, stock } = req.body;
-      const images = req.files.map((file) => file.path);
+
+      // Split sizes string into an array
+      const sizesArray = sizes.split(",");
 
       const product = new Product({
         name,
@@ -15,14 +23,16 @@ exports.addProduct = [
         price: { inr: priceInr, usd: priceUsd },
         category,
         gender,
-        sizes: JSON.parse(sizes),
-        images,
+        sizes: sizesArray,
+        // Store the Cloudinary URLs instead of local paths
+        images: req.files.map((file) => file.path),
         stock,
       });
 
       await product.save();
       res.status(201).json({ message: "Product added successfully", product });
     } catch (err) {
+      console.error("Error adding product:", err);
       res.status(500).json({ message: "Something went wrong" });
     }
   },

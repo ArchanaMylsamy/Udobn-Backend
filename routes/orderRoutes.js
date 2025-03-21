@@ -5,10 +5,15 @@ const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Customer routes
-router.post("/", authMiddleware.authenticate, orderController.placeOrder);
-router.get("/:customerId", authMiddleware.authenticate, orderController.getOrdersByCustomer);
+router.post("/", orderController.placeOrder);
+router.get("/customer/:customerId", orderController.getOrdersByCustomer);
 
-// Shop owner routes
-router.put("/:id/status", authMiddleware.authenticate, orderController.updateOrderStatus);
+// Admin/Shop owner routes
+router.get("/", orderController.getAllOrders);
+router.get("/stats", orderController.getOrderStats);
+router.put("/:id/status",  orderController.updateOrderStatus);
+router.put("/:id/payment",  orderController.updatePaymentStatus);
 
+// Get single order
+router.get("/:id",orderController.getOrderById);
 module.exports = router;
