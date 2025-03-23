@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
     usd: { type: Number , required:true},
   },
   orderDate: { type: Date, default: Date.now },
-  paymentMethod: { type: String, enum: ["COD", "Online", "Card"], required: true },
+  paymentMethod: { type: String, enum: ["COD", "Razorpay"], required: true },
   paymentStatus: { type: String, enum: ["Pending", "Paid", "Failed"], default: "Pending" },
   deliveryAddress: {
     street: { type: String, required: true },

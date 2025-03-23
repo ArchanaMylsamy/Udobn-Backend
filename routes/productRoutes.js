@@ -11,6 +11,7 @@ router.delete("/:id", productController.deleteProduct);
 
 // Customer routes
 router.get("/", productController.getAllProducts);
+router.get("/latest", productController.getLatestProducts);
 router.get("/category/:category", productController.getProductsByCategory);
 router.get("/gender/:gender",productController.getProductsByGender);
 

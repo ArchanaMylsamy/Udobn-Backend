@@ -80,6 +80,19 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+//Get latest Products
+exports.getLatestProducts = async (req, res) => {
+  try {
+    const latestProducts = await Product.find()
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .limit(5); // Get only the latest 5
+
+    res.json(latestProducts);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch latest products" });
+  }
+};
+
 //Get all products by gender
 exports.getProductsByGender = async (req, res) => {
   try {
