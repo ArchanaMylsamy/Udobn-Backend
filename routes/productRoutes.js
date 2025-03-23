@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Shop owner routes
 router.post("/", productController.addProduct);
-
+router.get("/:id", productController.getProductById);
 router.delete("/:id", productController.deleteProduct);
 
 // Customer routes

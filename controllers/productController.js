@@ -37,6 +37,31 @@ exports.addProduct = [
     }
   },
 ];
+
+// Get a single product by ID
+exports.getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const product = await Product.findById(id);
+    
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    
+    res.status(200).json({ product });
+  } catch (err) {
+    console.error("Error fetching product by id:", err);
+    
+    // Handle invalid ID format
+    if (err.name === 'CastError') {
+      return res.status(400).json({ message: "Invalid product ID format" });
+    }
+    
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 // Update product
 exports.updateProduct = async (req, res) => {
   try {
