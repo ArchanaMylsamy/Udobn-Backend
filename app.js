@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -13,6 +14,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const razorpayRoutes = require("./routes/razorpayRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 
 // Initialize app
 const app = express();
@@ -36,6 +38,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/razorpay",razorpayRoutes);
+app.use("/api/email",emailRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
