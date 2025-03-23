@@ -11,12 +11,12 @@ exports.addProduct = [
     try {
       console.log("Request body:", req.body);
       console.log("Uploaded files:", req.files);
-
+      
       const { name, description, priceInr, priceUsd, category, gender, sizes, stock } = req.body;
-
-      // Split sizes string into an array
-      const sizesArray = sizes.split(",");
-
+      
+      // Split sizes string into an array and trim each value
+      const sizesArray = sizes.split(",").map(size => size.trim());
+      
       const product = new Product({
         name,
         description,
@@ -28,7 +28,7 @@ exports.addProduct = [
         images: req.files.map((file) => file.path),
         stock,
       });
-
+      
       await product.save();
       res.status(201).json({ message: "Product added successfully", product });
     } catch (err) {
@@ -37,7 +37,6 @@ exports.addProduct = [
     }
   },
 ];
-
 // Update product
 exports.updateProduct = async (req, res) => {
   try {
@@ -81,13 +80,35 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+//Get all products by gender
+exports.getProductsByGender = async (req, res) => {
+  try {
+    const { gender } = req.params;
+    const products = await Product.find({ gender: gender });
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found for this gender" });
+    }
+    res.status(200).json({ products });
+  } catch (err) {
+    console.error("Error fetching products by gender:", err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 // Get products by category
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-    const products = await Product.find({ category });
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(500).json({ message: "Something went wrong" });
+    const gender = req.query.gender; // Optional: Add gender as a query parameter
+
+    const query = { category: category };
+    if (gender) {
+      query.gender = gender;
+    }
+
+    const products = await Product.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

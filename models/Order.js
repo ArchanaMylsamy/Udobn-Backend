@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const orderSchema = new mongoose.Schema({
   customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: true },
   products: [
@@ -10,8 +9,8 @@ const orderSchema = new mongoose.Schema({
     },
   ],
   totalAmount: {
-    inr: { type: Number, required: true },
-    usd: { type: Number, required: true },
+    inr: { type: Number },  // Made optional
+    usd: { type: Number }
   },
   orderDate: { type: Date, default: Date.now },
   paymentMethod: { type: String, enum: ["COD", "Online", "Card"], required: true },
@@ -36,7 +35,7 @@ const orderSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Pre-save middleware to update the updatedAt field
+// Middleware to update the `updatedAt` field before saving
 orderSchema.pre("save", function(next) {
   this.updatedAt = Date.now();
   next();

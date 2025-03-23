@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 
-// Place an order
+const Product = require("../models/Product"); // Import Product model
+
 exports.placeOrder = async (req, res) => {
   try {
     const { 
@@ -13,10 +14,29 @@ exports.placeOrder = async (req, res) => {
       deliveryAddress
     } = req.body;
 
+    let totalINR = 0;
+    let exchangeRate = 83.5; // Assume 1 USD = 83.5 INR (Replace with real-time conversion if needed)
+
+    // If totalAmount is not provided, calculate from product prices
+    if (!totalAmountInr || !totalAmountUsd) {
+      for (const item of products) {
+        const product = await Product.findById(item.productId);
+        if (!product) {
+          return res.status(404).json({ message: `Product not found: ${item.productId}` });
+        }
+        totalINR += product.price * item.quantity; // Fetch price from database
+      }
+    }
+
+    const totalAmount = {
+      inr: totalAmountInr || totalINR, 
+      usd: totalAmountUsd || (totalINR / exchangeRate).toFixed(2)
+    };
+
     const order = new Order({
       customerId,
       products,
-      totalAmount: { inr: totalAmountInr, usd: totalAmountUsd },
+      totalAmount,
       paymentMethod,
       paymentStatus,
       deliveryAddress

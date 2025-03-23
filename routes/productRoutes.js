@@ -12,6 +12,8 @@ router.delete("/:id", productController.deleteProduct);
 // Customer routes
 router.get("/", productController.getAllProducts);
 router.get("/category/:category", productController.getProductsByCategory);
+router.get("/gender/:gender",productController.getProductsByGender);
+
 // API to update a product in detail
 router.put("/:id", async (req, res) => {
     try {
