@@ -9,8 +9,8 @@ const orderSchema = new mongoose.Schema({
     },
   ],
   totalAmount: {
-    inr: { type: Number },  // Made optional
-    usd: { type: Number }
+    inr: { type: Number , required:true},
+    usd: { type: Number , required:true},
   },
   orderDate: { type: Date, default: Date.now },
   paymentMethod: { type: String, enum: ["COD", "Online", "Card"], required: true },

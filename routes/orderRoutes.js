@@ -7,6 +7,7 @@ const router = express.Router();
 // Customer routes
 router.post("/", orderController.placeOrder);
 router.get("/customer/:customerId", orderController.getOrdersByCustomer);
+router.get('/customer/:customerId/latest', orderController.getLatestOrderByCustomer);
 
 // Admin/Shop owner routes
 router.get("/", orderController.getAllOrders);
