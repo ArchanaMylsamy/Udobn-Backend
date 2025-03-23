@@ -14,6 +14,8 @@ router.get("/", orderController.getAllOrders);
 router.get("/stats", orderController.getOrderStats);
 router.put("/:id/status",  orderController.updateOrderStatus);
 router.put("/:id/payment",  orderController.updatePaymentStatus);
+// Delete order
+router.delete("/:id", orderController.deleteOrder);
 
 // Get single order
 router.get("/:id",orderController.getOrderById);

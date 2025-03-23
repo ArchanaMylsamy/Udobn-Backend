@@ -216,3 +216,22 @@ exports.getOrderById = async (req, res) => {
     res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
+// Delete order
+exports.deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const order = await Order.findById(id);
+    
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    
+    await Order.findByIdAndDelete(id);
+    
+    res.status(200).json({ message: "Order deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
+  }
+};
