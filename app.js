@@ -19,13 +19,22 @@ const emailRoutes = require("./routes/emailRoutes");
 // Initialize app
 const app = express();
 
-// Middleware
-app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use("/uploads", express.static("uploads"));
+// CORS configuration to allow all origins with credentials
+const corsOptions = {
+  origin: function (origin, callback) {
+    callback(null, true);  // Allow all origins
+  },
+  credentials: true,  // Allow cookies and credentials
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
+};
 
+app.use(cors(corsOptions));  // Enable CORS with options
+
+// Middleware
+app.use(express.json());       // Built-in JSON parser in Express
+app.use(cookieParser());       // Parse cookies
+app.use("/uploads", express.static("uploads"));
 
 // Database connection
 mongoose
@@ -37,13 +46,13 @@ mongoose
 app.use("/api/customers", customerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/razorpay",razorpayRoutes);
-app.use("/api/email",emailRoutes);
+app.use("/api/razorpay", razorpayRoutes);
+app.use("/api/email", emailRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+  console.error(err.stack);  // Log stack trace for debugging
+  res.status(500).json({ message: "Something went wrong!" });  // Generic error message
 });
 
 module.exports = app;
