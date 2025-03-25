@@ -42,7 +42,8 @@ module.exports = async (req, res) => {
     origin: function (origin, callback) {
       const allowedOrigins = [
         'http://localhost:3000', 
-        'https://your-frontend-domain.com'
+        'https://udobn.vercel.app',
+        'https://udobn-admin.vercel.app/'
       ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
