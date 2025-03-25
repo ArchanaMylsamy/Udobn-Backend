@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const createError = require('http-errors');
+const cors = require("cors");
 
 // Load environment variables early
 dotenv.config();
@@ -56,17 +57,27 @@ module.exports = async (req, res) => {
     // Create Express app
     const app = express();
 
-    // Minimal CORS configuration
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      next();
-    });
+    // Enable CORS
+    app.use(
+      cors({
+        origin: [
+          "http://localhost:3000", // Allow localhost for development
+          "https://udobn.vercel.app", // Replace with your frontend domain
+          "https://udobn-admin.vercel.app"
+        ],
+        credentials: true,
+      })
+    );
 
     // Lightweight middleware
     app.use(express.json({ limit: '10kb' }));
     app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+    // Log incoming requests
+    app.use((req, res, next) => {
+      console.log(`Incoming request: ${req.method} ${req.url}`);
+      next();
+    });
 
     // Health check route
     app.get('/api/health', (req, res) => {
